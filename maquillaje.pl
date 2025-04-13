@@ -52,9 +52,8 @@ base("Fresh & Fit", liquida, essence, [alcohol_denat]).
 base("Dream Matte Mousse", crema, maybelline, [oxido_de_zinc, acido_estearico]).
 
 % --- REGLAS ---
-% Regla de recomendación general
 recomendar_base(Usuario, Base) :-
-    piel(Usuario, TipoPiel),
+    piel(Usuario, _),  % antes: piel(Usuario, TipoPiel),
     preferencia_marca(Usuario, Gama),
     preferencia_tipo_base(Usuario, TipoBase),
     (   piel_sensible(Usuario) ->
@@ -71,9 +70,8 @@ recomendar_base(Usuario, Base) :-
         disponible(Base)
     ).
 
-% Regla para recomendaciones cercanas
 recomendar_base_cercana(Usuario, Base) :-
-    piel(Usuario, TipoPiel),
+    piel(Usuario, _),  % antes: piel(Usuario, TipoPiel),
     preferencia_marca(Usuario, Gama),
     preferencia_tipo_base(Usuario, TipoBase),
     base(Base, TipoBase, Marca, _),
@@ -115,7 +113,7 @@ agregar_disponibilidad(Base) :-
 agregar_alergia(Usuario, Ingrediente) :-
     assertz(alergia(Usuario, Ingrediente)).
 
-% Interacción con el usuario
+% Interfaz de línea (opcional)
 iniciar :-
     write('Bienvenido al sistema experto de recomendaciones de bases.\n'),
     write('Ingrese su nombre: '), read(Nombre),
@@ -131,7 +129,6 @@ iniciar :-
     ; true),
     recomendar_bases(Nombre).
 
-% Mostrar recomendaciones de bases
 recomendar_bases(Nombre) :-
     (   recomendar_base(Nombre, Base) ->
         write('Bases recomendadas para usted:\n'),
@@ -141,4 +138,3 @@ recomendar_bases(Nombre) :-
         write(Base), nl
     ;   write('Lo sentimos, no tenemos bases recomendadas para su perfil.\n')
     ).
-
