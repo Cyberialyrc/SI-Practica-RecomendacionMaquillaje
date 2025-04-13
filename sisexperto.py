@@ -5,6 +5,36 @@ from pyswip import Prolog
 prolog = Prolog()
 prolog.consult("maquillaje.pl")
 
+# Limpiar y registrar las bases disponibles
+prolog.query("retractall(disponible(_))")
+
+# Agregar las bases disponibles desde el inicio
+bases_disponibles = [
+    "Fit Me Matte",
+    "SuperStay Full Coverage",
+    "True Match",
+    "Double Wear",
+    "Studio Fix Powder",
+    "Nude Illusion",
+    "Fresh & Fit",
+    "Dream Matte Mousse",
+    "Skin Long-Wear Weightless",
+    "Forever Skin Glow",
+    "Synchro Skin Radiant Lifting",
+    "Healthy Mix",
+    "Photofocus Foundation",
+    "Stay All Day",
+    "HD Liquid Coverage",
+    "Soft Touch Mousse",
+    "Even Skin Tone",
+    "Mineralize Loose",
+    "Blur Stick"
+]
+
+
+for base in bases_disponibles:
+    prolog.query(f"agregar_disponibilidad('{base}')")
+
 imagenes = {
     "Fit Me Matte": "imagenes/fit_me_matte.png",
     "Double Wear": "imagenes/double_wear.png",
@@ -55,10 +85,10 @@ class CuestionarioApp:
             self.respuesta.set(tipo[0])
             for opcion in tipo:
                 tk.Radiobutton(self.frame, text=opcion.capitalize(), variable=self.respuesta, value=opcion,
-                               font=("Arial", 12), bg="#ffffff").pack(anchor="w", padx=20)
+                font=("Arial", 12), bg="#ffffff").pack(anchor="w", padx=20)
 
         tk.Button(self.frame, text="Siguiente", font=("Arial", 12, "bold"), bg="#4CAF50", fg="white",
-                  command=self.siguiente).pack(pady=25)
+        command=self.siguiente).pack(pady=25)
 
     def siguiente(self):
         clave = self.preguntas[self.indice][1]

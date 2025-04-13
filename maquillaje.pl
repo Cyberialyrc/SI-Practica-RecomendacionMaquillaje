@@ -40,6 +40,11 @@ gama_marca(essence, baja).
 gama_marca(jordana, baja).
 gama_marca(estee_lauder, alta).
 gama_marca(catrice, media).
+gama_marca(bobbi_brown, alta).
+gama_marca(shiseido, alta).
+gama_marca(bourjois, media).
+gama_marca(wet_n_wild, media).
+gama_marca(stila, media).
 
 % Base(nombre, tipo, marca, ingredientes)
 base("Fit Me Matte", liquida, maybelline, [dioxido_de_titanio, oxido_de_zinc]).
@@ -50,10 +55,21 @@ base("Studio Fix Powder", en_polvo, mac, [dioxido_de_titanio, siliconas]).
 base("Nude Illusion", liquida, catrice, [aloe_vera, parabenos]).
 base("Fresh & Fit", liquida, essence, [alcohol_denat]).
 base("Dream Matte Mousse", crema, maybelline, [oxido_de_zinc, acido_estearico]).
+base("Skin Long-Wear Weightless", liquida, bobbi_brown, [niacinamida, oxido_de_zinc, acido_hialuronico]).
+base("Forever Skin Glow", liquida, dior, [aloe_vera, vitamina_e, dioxido_de_titanio]).
+base("Synchro Skin Radiant Lifting", liquida, shiseido, [acido_hialuronico, oxido_de_zinc, bisabolol]).
+base("Healthy Mix", liquida, bourjois, [vitamina_e, niacinamida, aloe_vera]).
+base("Photofocus Foundation", liquida, wet_n_wild, [dioxido_de_titanio, oxido_de_zinc]).
+base("Stay All Day", liquida, stila, [oxido_de_zinc, acido_hialuronico]).
+base("HD Liquid Coverage", liquida, catrice, [niacinamida, oxido_de_zinc]).
+base("Soft Touch Mousse", crema, essence, [vitamina_e, bisabolol]).
+base("Even Skin Tone", liquida, jordana, [dioxido_de_titanio, aloe_vera]).
+base("Mineralize Loose", en_polvo, mac, [oxido_de_zinc, bisabolol]).
+base("Blur Stick", barra, loreal, [dioxido_de_titanio, niacinamida]).
 
 % --- REGLAS ---
 recomendar_base(Usuario, Base) :-
-    piel(Usuario, _),  % antes: piel(Usuario, TipoPiel),
+    piel(Usuario, _),
     preferencia_marca(Usuario, Gama),
     preferencia_tipo_base(Usuario, TipoBase),
     (   piel_sensible(Usuario) ->
@@ -61,12 +77,14 @@ recomendar_base(Usuario, Base) :-
         gama_marca(Marca, Gama),
         not((member(Irr, Ingredientes), ingrediente_irritante(Irr))),
         not((member(Com, Ingredientes), ingrediente_comedogenico(Com))),
-        member(Benef, Ingredientes), ingrediente_benefico(Benef),
+        not((alergia(Usuario, A), member(A, Ingredientes))),
+        tiene_ingrediente_benefico(Ingredientes),
         disponible(Base)
     ;
         base(Base, TipoBase, Marca, Ingredientes),
         gama_marca(Marca, Gama),
         not((member(Com, Ingredientes), ingrediente_comedogenico(Com))),
+        not((alergia(Usuario, A), member(A, Ingredientes))),
         disponible(Base)
     ).
 
@@ -138,3 +156,24 @@ recomendar_bases(Nombre) :-
         write(Base), nl
     ;   write('Lo sentimos, no tenemos bases recomendadas para su perfil.\n')
     ).
+
+% Bases disponibles por defecto
+:- agregar_disponibilidad("Fit Me Matte").
+:- agregar_disponibilidad("SuperStay Full Coverage").
+:- agregar_disponibilidad("True Match").
+:- agregar_disponibilidad("Double Wear").
+:- agregar_disponibilidad("Studio Fix Powder").
+:- agregar_disponibilidad("Nude Illusion").
+:- agregar_disponibilidad("Fresh & Fit").
+:- agregar_disponibilidad("Dream Matte Mousse").
+:- agregar_disponibilidad("Skin Long-Wear Weightless").
+:- agregar_disponibilidad("Forever Skin Glow").
+:- agregar_disponibilidad("Synchro Skin Radiant Lifting").
+:- agregar_disponibilidad("Healthy Mix").
+:- agregar_disponibilidad("Photofocus Foundation").
+:- agregar_disponibilidad("Stay All Day").
+:- agregar_disponibilidad("HD Liquid Coverage").
+:- agregar_disponibilidad("Soft Touch Mousse").
+:- agregar_disponibilidad("Even Skin Tone").
+:- agregar_disponibilidad("Mineralize Loose").
+:- agregar_disponibilidad("Blur Stick").

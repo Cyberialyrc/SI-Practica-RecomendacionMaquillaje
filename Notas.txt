@@ -1,0 +1,10 @@
+Al ejecutar en prolog, agregar esto:
+
+agregar_disponibilidad("Fit Me Matte").
+agregar_disponibilidad("SuperStay Full Coverage").
+agregar_disponibilidad("True Match").
+agregar_disponibilidad("Double Wear").
+agregar_disponibilidad("Studio Fix Powder").
+agregar_disponibilidad("Nude Illusion").
+agregar_disponibilidad("Fresh & Fit").
+agregar_disponibilidad("Dream Matte Mousse").
