@@ -72,21 +72,35 @@ recomendar_base(Usuario, Base) :-
     piel(Usuario, _),
     preferencia_marca(Usuario, Gama),
     preferencia_tipo_base(Usuario, TipoBase),
-    (   piel_sensible(Usuario) ->
-        base(Base, TipoBase, Marca, Ingredientes),
-        gama_marca(Marca, Gama),
-        not((member(Irr, Ingredientes), ingrediente_irritante(Irr))),
-        not((member(Com, Ingredientes), ingrediente_comedogenico(Com))),
-        not((alergia(Usuario, A), member(A, Ingredientes))),
-        tiene_ingrediente_benefico(Ingredientes),
-        disponible(Base)
-    ;
-        base(Base, TipoBase, Marca, Ingredientes),
-        gama_marca(Marca, Gama),
-        not((member(Com, Ingredientes), ingrediente_comedogenico(Com))),
-        not((alergia(Usuario, A), member(A, Ingredientes))),
-        disponible(Base)
+    base(Base, TipoBase, Marca, Ingredientes),
+    gama_marca(Marca, Gama),
+    disponible(Base),
+    not(tiene_comedogenico(Ingredientes)),
+    not(tiene_alergia(Usuario, Ingredientes)),
+    (
+        piel_sensible(Usuario) ->
+            not(tiene_irritante(Ingredientes)),
+            tiene_ingrediente_benefico(Ingredientes)
+        ;
+            true
     ).
+
+tiene_comedogenico(Ingredientes) :-
+    member(Ing, Ingredientes),
+    ingrediente_comedogenico(Ing).
+
+tiene_irritante(Ingredientes) :-
+    member(Ing, Ingredientes),
+    ingrediente_irritante(Ing).
+
+tiene_ingrediente_benefico(Ingredientes) :-
+    member(Ing, Ingredientes),
+    ingrediente_benefico(Ing).
+
+tiene_alergia(Usuario, Ingredientes) :-
+    alergia(Usuario, Alergeno),
+    member(Alergeno, Ingredientes).
+    
 
 recomendar_base_cercana(Usuario, Base) :-
     piel(Usuario, _),  % antes: piel(Usuario, TipoPiel),

@@ -6,7 +6,7 @@ prolog = Prolog()
 prolog.consult("maquillaje.pl")
 
 # Limpiar y registrar las bases disponibles
-prolog.query("retractall(disponible(_))")
+prolog.query("retractall(disponible(_)).")
 
 # Agregar las bases disponibles desde el inicio
 bases_disponibles = [
@@ -33,7 +33,7 @@ bases_disponibles = [
 
 
 for base in bases_disponibles:
-    prolog.query(f"agregar_disponibilidad('{base}')")
+    prolog.query(f"agregar_disponibilidad('{base}').")
 
 imagenes = {
     "Fit Me Matte": "imagenes/fit_me_matte.png",
@@ -106,29 +106,26 @@ class CuestionarioApp:
             self.recomendar()
 
     def recomendar(self):
-        nombre = f"'{respuestas['nombre'].strip().lower()}'"
+        nombre = respuestas['nombre'].strip().lower()
         tipo_piel = respuestas["tipo_piel"]
         sensible = respuestas["sensible"]
         gama = respuestas["gama"]
         tipo_base = respuestas["tipo_base"]
 
-        prolog.query(f"retractall(piel({nombre},_))")
-        prolog.query(f"retractall(preferencia_marca({nombre},_))")
-        prolog.query(f"retractall(preferencia_tipo_base({nombre},_))")
-        prolog.query(f"retractall(piel_sensible({nombre}))")
-        prolog.query(f"retractall(alergia({nombre},_))")
+        print(f"[DEBUG] Registrando usuario: {nombre}")
+        print(f"[DEBUG] Características: piel={tipo_piel}, sensible={sensible}, gama={gama}, tipo_base={tipo_base}")
 
-        prolog.query(f"registrar_usuario({nombre}, {tipo_piel}, {sensible}, {gama}, {tipo_base})")
-
-        for base in ["Fit Me Matte", "True Match", "Double Wear", "Studio Fix Powder", "Nude Illusion"]:
-            prolog.query(f"agregar_disponibilidad('{base}')")
+        prolog.query(f"registrar_usuario({nombre}, '{tipo_piel}', '{sensible}', '{gama}', '{tipo_base}').")
 
         if respuestas.get("alergico") == "si" and respuestas.get("ingrediente_alergia"):
-            prolog.query(f"agregar_alergia({nombre}, {respuestas['ingrediente_alergia']})")
+            print(f"[DEBUG] Registrando alergia: {respuestas['ingrediente_alergia']}")
+            prolog.query(f"agregar_alergia({nombre}, '{respuestas['ingrediente_alergia']}').")
 
-        resultados = list(prolog.query(f"recomendar_base({nombre}, Base)"))
+        resultados = list(prolog.query(f"recomendar_base({nombre}, Base)."))
+        print(f"[DEBUG] Resultados exactos: {resultados}")
         if not resultados:
-            resultados = list(prolog.query(f"recomendar_base_cercana({nombre}, Base)"))
+            resultados = list(prolog.query(f"recomendar_base_cercana({nombre}, Base)."))
+            print(f"[DEBUG] Resultados cercanos: {resultados}")
 
         self.mostrar_resultados(resultados)
 
