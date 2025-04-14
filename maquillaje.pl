@@ -68,7 +68,11 @@ base("Mineralize Loose", en_polvo, mac, [oxido_de_zinc, bisabolol]).
 base("Blur Stick", barra, loreal, [dioxido_de_titanio, niacinamida]).
 
 % --- REGLAS ---
-recomendar_base(Usuario, Base) :-
+recomendar_base(Usuario, X) :-
+    setof(Base, recomendar_base_individual(Usuario, Base), Bases),
+    member(X, Bases).
+
+recomendar_base_individual(Usuario, Base) :-
     piel(Usuario, _),
     preferencia_marca(Usuario, Gama),
     preferencia_tipo_base(Usuario, TipoBase),
@@ -78,24 +82,25 @@ recomendar_base(Usuario, Base) :-
     not(tiene_comedogenico(Ingredientes)),
     not(tiene_alergia(Usuario, Ingredientes)),
     (
-        piel_sensible(Usuario) ->
+        piel_sensible(Usuario) -> 
             not(tiene_irritante(Ingredientes)),
             tiene_ingrediente_benefico(Ingredientes)
         ;
             true
     ).
 
+
 tiene_comedogenico(Ingredientes) :-
-    member(Ing, Ingredientes),
-    ingrediente_comedogenico(Ing).
+    member(I, Ingredientes),
+    ingrediente_comedogenico(I).
 
 tiene_irritante(Ingredientes) :-
-    member(Ing, Ingredientes),
-    ingrediente_irritante(Ing).
+    member(I, Ingredientes),
+    ingrediente_irritante(I).
 
 tiene_ingrediente_benefico(Ingredientes) :-
-    member(Ing, Ingredientes),
-    ingrediente_benefico(Ing).
+    member(I, Ingredientes),
+    ingrediente_benefico(I).
 
 tiene_alergia(Usuario, Ingredientes) :-
     alergia(Usuario, Alergeno),
@@ -160,16 +165,6 @@ iniciar :-
         agregar_alergia(Nombre, Ingrediente)
     ; true),
     recomendar_bases(Nombre).
-
-recomendar_bases(Nombre) :-
-    (   recomendar_base(Nombre, Base) ->
-        write('Bases recomendadas para usted:\n'),
-        write(Base), nl
-    ;   recomendar_base_cercana(Nombre, Base) ->
-        write('No hay bases exactas, pero la más cercana es:\n'),
-        write(Base), nl
-    ;   write('Lo sentimos, no tenemos bases recomendadas para su perfil.\n')
-    ).
 
 % Bases disponibles por defecto
 :- agregar_disponibilidad("Fit Me Matte").

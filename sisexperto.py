@@ -115,16 +115,16 @@ class CuestionarioApp:
         print(f"[DEBUG] Registrando usuario: {nombre}")
         print(f"[DEBUG] Características: piel={tipo_piel}, sensible={sensible}, gama={gama}, tipo_base={tipo_base}")
 
-        prolog.query(f"registrar_usuario({nombre}, '{tipo_piel}', '{sensible}', '{gama}', '{tipo_base}').")
+        list(prolog.query(f"registrar_usuario({nombre}, '{tipo_piel}', '{sensible}', '{gama}', '{tipo_base}')."))
 
         if respuestas.get("alergico") == "si" and respuestas.get("ingrediente_alergia"):
             print(f"[DEBUG] Registrando alergia: {respuestas['ingrediente_alergia']}")
             prolog.query(f"agregar_alergia({nombre}, '{respuestas['ingrediente_alergia']}').")
 
-        resultados = list(prolog.query(f"recomendar_base({nombre}, Base)."))
+        resultados = list(prolog.query(f"recomendar_base({nombre}, B)."))
         print(f"[DEBUG] Resultados exactos: {resultados}")
         if not resultados:
-            resultados = list(prolog.query(f"recomendar_base_cercana({nombre}, Base)."))
+            resultados = list(prolog.query(f"recomendar_base_cercana({nombre}, B)."))
             print(f"[DEBUG] Resultados cercanos: {resultados}")
 
         self.mostrar_resultados(resultados)
@@ -140,7 +140,8 @@ class CuestionarioApp:
         tk.Label(self.frame, text="Productos recomendados:", font=("Arial", 14, "bold"), bg="#ffffff").pack(pady=10)
 
         for resultado in resultados:
-            nombre_base = resultado["Base"]
+            print(resultado)
+            nombre_base = resultado["X"]
             tk.Label(self.frame, text=nombre_base, font=("Arial", 12, "bold"), bg="#ffffff").pack()
 
             if nombre_base in imagenes:
