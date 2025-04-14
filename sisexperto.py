@@ -36,22 +36,21 @@ respuestas = {}
 class CuestionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.geometry("600x550")
+        self.root.geometry("600x700")
         self.root.configure(bg="#EBE8DB")
         self.root.resizable(False, False)
 
-        # Portada
-        if "portada" in imagenes:
-            try:
-                portada_img = PhotoImage(file=imagenes["portada"])
-                portada_label = tk.Label(root, image=portada_img, bg="#EBE8DB")
-                portada_label.image = portada_img
-                portada_label.pack(pady=10)
-            except:
-                pass
+        # Imagen como botón de inicio (sin cuadro blanco)
+        try:
+            portada_img = PhotoImage(file=imagenes["portada"])
+            self.portada_btn = tk.Button(self.root, image=portada_img, bd=0, highlightthickness=0, relief="flat", command=self.build_pantalla)
+            self.portada_btn.image = portada_img
+            self.portada_btn.pack(pady=30)
+        except Exception as e:
+            print(f"Error al cargar imagen de portada: {e}")
+            self.build_pantalla()
 
         self.frame = tk.Frame(root, bg="#ffffff", bd=2, relief=tk.GROOVE)
-        self.frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER, width=500, height=400)
 
         self.preguntas = [
             ("¿Cuál es tu nombre?", "nombre", "entry"),
@@ -63,9 +62,13 @@ class CuestionarioApp:
             ("¿A qué ingrediente eres alérgico?", "ingrediente_alergia", "entry")
         ]
         self.indice = 0
-        self.build_pantalla()
 
     def build_pantalla(self):
+        if hasattr(self, 'portada_btn'):
+            self.portada_btn.destroy()
+
+        self.frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER, width=500, height=400)
+
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -139,7 +142,8 @@ class CuestionarioApp:
                     img_label = tk.Label(self.frame, image=img, bg="#ffffff")
                     img_label.image = img
                     img_label.pack()
-                except:
+                except Exception as e:
+                    print(f"Error al cargar imagen de producto {nombre_base}: {e}")
                     tk.Label(self.frame, text="[Imagen no disponible]", bg="#ffffff").pack()
 
             if nombre_base in descripciones:
@@ -151,3 +155,4 @@ if __name__ == "__main__":
     root.title("Sistema Experto de Maquillaje")
     app = CuestionarioApp(root)
     root.mainloop()
+
