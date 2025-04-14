@@ -141,7 +141,7 @@ class CuestionarioApp:
 
         for resultado in resultados:
             print(resultado)
-            nombre_base = resultado["X"]
+            nombre_base = resultado["B"]
             tk.Label(self.frame, text=nombre_base, font=("Arial", 12, "bold"), bg="#ffffff").pack()
 
             if nombre_base in imagenes:

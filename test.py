@@ -15,7 +15,7 @@ resultados = list(prolog.query("recomendar_base(percy, X)."))
 if resultados:
     print("Bases recomendadas:")
     for resultado in resultados:
-        print(resultado["X"])  # Aquí accedemos a la variable "X" que contiene las bases recomendadas
+        print(resultado["X"].decode())  # Aquí accedemos a la variable "X" que contiene las bases recomendadas
 else:
     print("No se encontraron recomendaciones.")
 print("Resultados completos:", resultados)
