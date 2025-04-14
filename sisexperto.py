@@ -53,7 +53,7 @@ class CuestionarioApp:
             print(f"Error al cargar imagen de portada: {e}")
             self.build_pantalla()
 
-        self.frame = ctk.CTkFrame(self.root, fg_color="#ffffff", corner_radius=20, width=500, height=400)
+        self.frame = ctk.CTkFrame(self.root, fg_color="#ffffff", corner_radius=40, width=420, height=340, border_width=0)
 
         self.preguntas = [
             ("¿Cuál es tu nombre?", "nombre", "entry"),
@@ -71,6 +71,8 @@ class CuestionarioApp:
             self.portada_btn.destroy()
 
         self.frame.place(relx=0.5, rely=0.55, anchor="center")
+        self.frame.configure(bg_color="#EBE8DB")
+        self.frame.pack_propagate(False)
 
         for widget in self.frame.winfo_children():
             widget.destroy()
@@ -79,7 +81,7 @@ class CuestionarioApp:
         ctk.CTkLabel(self.frame, text=pregunta, text_color="#B03052", font=("Century Gothic", 16, "bold")).pack(pady=15)
 
         if tipo == "entry":
-            self.respuesta = ctk.CTkEntry(self.frame, width=300, corner_radius=10, fg_color="#fdf7f7")
+            self.respuesta = ctk.CTkEntry(self.frame, width=160, corner_radius=10, fg_color="#fdf7f7", justify="center", placeholder_text="Escribe tu nombre")
             self.respuesta.pack(pady=10)
         else:
             self.respuesta = ctk.StringVar()
@@ -157,4 +159,5 @@ if __name__ == "__main__":
     root.title("Sistema Experto de Maquillaje")
     app = CuestionarioApp(root)
     root.mainloop()
+
 
